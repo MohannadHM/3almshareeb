@@ -2,6 +2,7 @@
 import { StyleSheet } from "react-native"
 
 const GlobalStyles = StyleSheet.create({
+
   container: {
     flex: 1,
     backgroundColor: "#0A0E27", // Deep navy blue for more fun dark mode
@@ -246,7 +247,7 @@ const GlobalStyles = StyleSheet.create({
   tableText: {
     color: "#E0E0E0",
     textAlign: "center",
-    fontSize: 12,
+    fontSize: 14,
   },
 })
 

@@ -1,7 +1,7 @@
 "use client"
 
+import { FontAwesome } from '@expo/vector-icons';
 import { useEffect, useState } from "react";
-import { FaArrowAltCircleUp } from 'react-icons/fa';
 import {
   Image,
   Modal,
@@ -10,8 +10,9 @@ import {
   Text,
   TextInput,
   TouchableWithoutFeedback,
-  View,
+  View
 } from "react-native";
+import { Checkbox } from 'react-native-paper';
 import GlobalStyles from "../../styles/global";
 
 export default function BalootScreen() {
@@ -24,6 +25,7 @@ export default function BalootScreen() {
   const [showMasharea, setShowMasharea] = useState(false)
   const [showGaidConfirm, setShowGaidConfirm] = useState<null | "you" | "them">(null)
   const [showEndGame, setShowEndGame] = useState(false)
+  const [advancedSettings, setAdvancedSettings] = useState(true)
 
   const [youInput, setYouInput] = useState({ points: "", abnat: "", masharea: {} as any })
   const [themInput, setThemInput] = useState({ points: "", abnat: "", masharea: {} as any })
@@ -303,110 +305,96 @@ export default function BalootScreen() {
   }
 
   return (
-    <View style={[GlobalStyles.container, { flex: 1 }]}>
-      {/* Scores Row */}
-      <View style={GlobalStyles.totalContainer}>
-        <View style={GlobalStyles.totalRow}>
-          <View style={GlobalStyles.totalItem}>
-            <Text style={[GlobalStyles.totalLabel, { fontSize: 14 }]}>You ⭐</Text>
-            <Text style={[GlobalStyles.totalValue, { fontSize: 20 }]}>{youPoints}</Text>
-          </View>
-          <View style={[GlobalStyles.totalItem, { borderLeftWidth: 1, borderRightWidth: 1, borderColor: "#4A5568" }]}>
-            <Text style={[GlobalStyles.totalLabel, { fontSize: 14 }]}>Target</Text>
-            <Text style={[GlobalStyles.totalValue, { fontSize: 18, color: "#A0AEC0" }]}>{WIN_SCORE}</Text>
-          </View>
-          <View style={GlobalStyles.totalItem}>
-            <Text style={[GlobalStyles.totalLabel, { fontSize: 14 }]}>Them 💀</Text>
-            <Text style={[GlobalStyles.totalValue, { fontSize: 20 }]}>{themPoints}</Text>
-          </View>
+    <View style={[GlobalStyles.container, { flex: 1, backgroundColor: "#000", justifyContent: "center" }]}>
+      {/* Scoreboard */}
+      <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingHorizontal: 20 }}>
+        <View style={{ alignItems: "center" }}>
+          <Text style={{ color: "#fff", fontSize: 36, fontWeight: "bold" }}>You ⭐</Text>
+          <Text style={{ color: "#fff", fontSize: 54, fontWeight: "bold" }}>{youPoints}</Text>
+        </View>
+  
+        <View style={{ alignItems: "center" }}>
+          <Text style={{ color: "#fff", fontSize: 36, fontWeight: "bold" }}>Them 💀</Text>
+          <Text style={{ color: "#fff", fontSize: 54, fontWeight: "bold" }}>{themPoints}</Text>
         </View>
       </View>
   
-      {/* Win text */}
+      {/* Win Text */}
       {winTeam !== "" && (
-        <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", marginVertical: 10, }}>
-          <Text
-            style={{
-              color: "#00FF88",
-              fontSize: 18,
-              textAlign: "center",
-              fontWeight: "600",
-              marginRight: 10, // spacing between text and button
-            }}
-          >
+        <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", marginVertical: 10 }}>
+          <Text style={{ color: "#00FF88", fontSize: 22, textAlign: "center", fontWeight: "700", marginRight: 10 }}>
             {winTeam} Wins! 🎉
           </Text>
-        
           <Pressable
             onPress={() => setShowEndGame(true)}
             style={{
-              backgroundColor: "#2D3748", // your secondary button color
-              borderRadius: 8,
-              paddingVertical: 6,
-              paddingHorizontal: 10,
-              flexDirection: "row",       // for icon + text alignment
+              backgroundColor: "#2D3748",
+              borderRadius: 10,
+              paddingVertical: 8,
+              paddingHorizontal: 12,
+              flexDirection: "row",
               alignItems: "center",
               justifyContent: "center",
             }}
           >
-            <FaArrowAltCircleUp
-              size={16}
-              color="#FFFFFF"
-              style={{ marginRight: 5 }}
-            />
-            <Text
-              style={{
-                color: "#FFFFFF",
-                fontSize: 14,
-                fontWeight: "500",
-                textAlign: "center",
-              }}
-            >
-              View Details
-            </Text>
+            <FontAwesome name="arrow-circle-up" size={18} color="#FFFFFF" style={{ marginRight: 5 }} />
+            <Text style={{ color: "#FFFFFF", fontSize: 14, fontWeight: "600" }}>View Details</Text>
           </Pressable>
         </View>
-      
-      
       )}
   
-      {/* Game Type + Auto Calculate */}
-      <View style={[GlobalStyles.row, { justifyContent: "center", marginVertical: 6 }]}>
-        <View style={{ flexDirection: "row" }}>
-          {["Sun", "Hukum"].map((type) => (
-            <Pressable
-              key={type}
-              style={[GlobalStyles.option, { padding: 6, marginHorizontal: 3 }, gameType === type && GlobalStyles.selected]}
-              onPress={() => setGameType(type as "Sun" | "Hukum")}
-            >
-              <Text style={[GlobalStyles.h2, { fontSize: 14 }]}>{type}</Text>
-            </Pressable>
-          ))}
+      {/* Advanced Settings */}
+      <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingHorizontal: 16, marginTop: 4 }}>
+        <View style={{ width: 150, justifyContent: 'center', borderRadius: 50, padding: 15, marginHorizontal: 0, backgroundColor: "#00D9FF", flexDirection: "row", alignItems: "center" }}>
+          <Text style={{ color: "#000", fontSize: 20, fontWeight: "800" }}>Pro</Text>
+          <Checkbox
+            status={advancedSettings ? "checked" : "unchecked"}
+            onPress={() => setAdvancedSettings(!advancedSettings)}
+            color="#7C3AED"
+          />
         </View>
+        <Pressable style={{ width: 150, justifyContent: 'center', backgroundColor: "#00D9FF", borderRadius: 50, padding: 18, marginHorizontal: 10 }} onPress={handleAutoCalculate}>
+          <Text style={{ color: "#000", fontSize: 20, fontWeight: "800" }}>Calculate⚡</Text>
+        </Pressable>
       </View>
-      <Pressable style={[GlobalStyles.buttonSecondary, { paddingVertical: 6, paddingHorizontal: 5 }]} onPress={handleAutoCalculate}>
-        <Text style={[GlobalStyles.buttonText, { fontSize: 12 }]}> Auto Calculate⚡</Text>
-      </Pressable>
   
       {/* Error messages */}
       {error !== "" && <Text style={[GlobalStyles.errorText, { fontSize: 12, textAlign: "center" }]}>{error}</Text>}
+
+      {/* Game Type + Auto Calculate */}
+      {advancedSettings &&
+        <View style={[GlobalStyles.row, { justifyContent: "center", marginVertical: 6 }]}>
+          <View style={{ flexDirection: "row" }}>
+            <Pressable
+              key={"Sun"}
+              style={[GlobalStyles.option, { marginHorizontal: 0, padding: 6, borderBottomRightRadius: 0, borderTopRightRadius: 0 }, gameType === "Sun" && GlobalStyles.selected]}
+              onPress={() => setGameType("Sun")}
+            >
+              <Text style={[GlobalStyles.h2, { fontSize: 14 }]}>Sun</Text>
+            </Pressable>
+            <Pressable
+              key={"Hukum"}
+              style={[GlobalStyles.option, { marginHorizontal: 0, padding: 6, borderBottomLeftRadius: 0, borderTopLeftRadius: 0 }, gameType === "Hukum" && GlobalStyles.selected]}
+              onPress={() => setGameType("Hukum")}
+            >
+              <Text style={[GlobalStyles.h2, { fontSize: 14 }]}>Hukum</Text>
+            </Pressable>
+          </View>
+        </View>
+      }
   
-      {/* Compact Input Section */}
-      <View style={[GlobalStyles.inputSection, { marginVertical: 4 }]}>
-        {/* Header Row */}
+      {/* Input Section */}
+      <View style={[GlobalStyles.inputSection, { marginVertical: 10 }]}>
+        {/* Header */}
         <View style={[GlobalStyles.row, { justifyContent: "space-around", marginBottom: 4 }]}>
-          <Text style={[GlobalStyles.teamLabel, { fontSize: 14 }]}>You ⭐</Text>
-          <Text style={[GlobalStyles.teamLabel, { fontSize: 14 }]}>Them 💀</Text>
+          <Text style={{ color: "#fff", fontSize: 16, fontWeight: "bold" }}>You ⭐</Text>
+          <Text style={{ color: "#fff", fontSize: 16, fontWeight: "bold" }}>Them 💀</Text>
         </View>
   
-        {/* Masharea / Pts Row */}
+        {/* Points Row */}
         <View style={[GlobalStyles.row, { justifyContent: "space-around", alignItems: "center" }]}>
-          <Pressable onPress={openMasharea} style={[GlobalStyles.actionButton, { backgroundColor: "#7C3AED", padding: 6, margin: 6 }]}>
-            <Text style={{ color: "white", fontSize: 10 }}>Masharea</Text>
-          </Pressable>
-  
           <TextInput
-            style={[GlobalStyles.input, { width: 60, fontSize: 12 }]}
+            style={[GlobalStyles.input, { width: 70, fontSize: 14 }]}
             placeholder="Pts"
             placeholderTextColor="#4A5568"
             keyboardType="numeric"
@@ -416,9 +404,8 @@ export default function BalootScreen() {
               setYouInput((prev) => ({ ...prev, points: text }))
             }}
           />
-  
           <TextInput
-            style={[GlobalStyles.input, { width: 60, fontSize: 12 }]}
+            style={[GlobalStyles.input, { width: 70, fontSize: 14 }]}
             placeholder="Pts"
             placeholderTextColor="#4A5568"
             keyboardType="numeric"
@@ -428,20 +415,12 @@ export default function BalootScreen() {
               setThemInput((prev) => ({ ...prev, points: text }))
             }}
           />
-  
-          <Pressable onPress={openMasharea} style={[GlobalStyles.actionButton, { backgroundColor: "#7C3AED", padding: 6 }]}>
-            <Text style={{ color: "white", fontSize: 10 }}>Masharea</Text>
-          </Pressable>
         </View>
   
-        {/* Gaid / Abnat Row */}
-        <View style={[GlobalStyles.row, { justifyContent: "space-around", alignItems: "center", marginTop: 6 }]}>
-          <Pressable onPress={() => setShowGaidConfirm("you")} style={[GlobalStyles.actionButton, { backgroundColor: "#FF4757", padding: 6, margin: 6 }]}>
-            <Text style={{ color: "white", fontSize: 10 }}>Gaid!</Text>
-          </Pressable>
-  
+        {/* Abnat Row */}
+        <View style={[GlobalStyles.row, { justifyContent: "space-around", alignItems: "center", marginTop: 10 }]}>
           <TextInput
-            style={[GlobalStyles.input, { width: 60, fontSize: 12 }]}
+            style={[GlobalStyles.input, { width: 70, fontSize: 14 }]}
             placeholder="Abnat"
             placeholderTextColor="#4A5568"
             keyboardType="numeric"
@@ -451,9 +430,8 @@ export default function BalootScreen() {
               setYouInput((prev) => ({ ...prev, abnat: text }))
             }}
           />
-  
           <TextInput
-            style={[GlobalStyles.input, { width: 60, fontSize: 12 }]}
+            style={[GlobalStyles.input, { width: 70, fontSize: 14 }]}
             placeholder="Abnat"
             placeholderTextColor="#4A5568"
             keyboardType="numeric"
@@ -463,25 +441,37 @@ export default function BalootScreen() {
               setThemInput((prev) => ({ ...prev, abnat: text }))
             }}
           />
-  
-          <Pressable onPress={() => setShowGaidConfirm("them")} style={[GlobalStyles.actionButton, { backgroundColor: "#FF4757", padding: 6 }]}>
-            <Text style={{ color: "white", fontSize: 10 }}>Gaid!</Text>
-          </Pressable>
         </View>
+  
+        {/* Advanced Buttons */}
+        {advancedSettings && (
+          <View style={[GlobalStyles.row, { justifyContent: "space-around", alignItems: "center", marginTop: 12 }]}>
+            <Pressable onPress={() => setShowGaidConfirm("you")} style={[GlobalStyles.actionButton, { width: 100, backgroundColor: "#FF4757", padding: 10, borderRadius: 8 }]}>
+              <Text style={{ color: "white", fontSize: 14, fontWeight: "bold" }}>Gaid!</Text>
+            </Pressable>
+            <Pressable onPress={openMasharea} style={[GlobalStyles.actionButton, { width: 100, backgroundColor: "#7C3AED", padding: 10, borderRadius: 8 }]}>
+              <Text style={{ color: "white", fontSize: 14, fontWeight: "bold" }}>Masharea</Text>
+            </Pressable>
+            <Pressable onPress={() => setShowGaidConfirm("them")} style={[GlobalStyles.actionButton, { width: 100, backgroundColor: "#FF4757", padding: 10, borderRadius: 8 }]}>
+              <Text style={{ color: "white", fontSize: 14, fontWeight: "bold" }}>Gaid!</Text>
+            </Pressable>
+          </View>
+        )}
+      </View>
+
+      {/* Big Action Buttons */}
+      <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", marginVertical: 20 }}>
+        <Pressable style={{ borderRadius: 50, padding: 18, marginHorizontal: 10 }} onPress={revertLastRound}>
+          <Text style={{ color: "#fff", fontSize: 35, fontWeight: "bold" }}>↩</Text>
+        </Pressable>
+  
+        <Pressable style={{ backgroundColor: "#fff", borderRadius: 80, paddingVertical: 20, paddingHorizontal: 40 }} onPress={addRound}>
+          <Text style={{ color: "#000", fontSize: 20, fontWeight: "800" }}>Add</Text>
+        </Pressable>
       </View>
   
-      {/* Add / Revert round Buttons */}
-      <View style={{ flexDirection: "row", justifyContent: "center", marginVertical: 6 }}>
-        <Pressable style={[GlobalStyles.button, { padding: 6, width: 50, marginRight: 8 }]} onPress={addRound}>
-          <Text style={[GlobalStyles.buttonText, { fontSize: 16 }]}>➕</Text>
-        </Pressable>
-        <Pressable style={[GlobalStyles.buttonDanger, { padding: 6, width: 50 }]} onPress={revertLastRound}>
-          <Text style={[GlobalStyles.buttonText, { fontSize: 16 }]}>↩</Text>
-        </Pressable>
-      </View>
-  
-      {/* Rounds Table (Scrollable Only Section) */}
-      <ScrollView style={[GlobalStyles.tableContainer, { flex: 1, marginTop: 4 }]}>
+      {/* Rounds Table */}
+      <ScrollView style={[GlobalStyles.tableContainer, { flex: 1, marginTop: 10 }]}>
         {rounds.map((r, i) => (
           <View key={i} style={[GlobalStyles.tableRow, r.gaid && GlobalStyles.gaidRow]}>
             <Text style={[GlobalStyles.tableText, { flex: 1 }]}>{r.type}</Text>
@@ -537,8 +527,8 @@ export default function BalootScreen() {
           </View>
         </View>
       </Modal>
-
-      {/* Masharea Modal */}
+  
+      {/* === MASHAREA MODAL (NEW TABBED DESIGN) === */}
       <Modal
         visible={showMasharea}
         transparent
@@ -568,17 +558,6 @@ export default function BalootScreen() {
                   padding: 12,
                 }}
               >
-                {/* Title */}
-                {/* <Text
-                  style={[
-                    GlobalStyles.title,
-                    { textAlign: "center", marginBottom: 10 },
-                  ]}
-                >
-                  Masharea Bonuses
-                </Text> */}
-
-                {/* Header Row */}
                 <View
                   style={{
                     flexDirection: "row",
@@ -616,6 +595,7 @@ export default function BalootScreen() {
                             color: "#FFD700",
                             textAlign: "center",
                             fontWeight: "600",
+                            fontSize: 20,
                           }}
                         >
                           {key}
@@ -631,8 +611,8 @@ export default function BalootScreen() {
                           alignItems: "center",
                         }}
                       >
-                        <Pressable onPress={() => modifyMasharea("you", key, +1)}>
-                          <Text style={{ color: "limegreen", fontSize: 18 }}>+</Text>
+                        <Pressable style={{ width: 20 }} onPress={() => modifyMasharea("you", key, +1)}>
+                          <Text style={{ color: "limegreen", fontSize: 25 }}>+</Text>
                         </Pressable>
 
                         <Text
@@ -640,13 +620,14 @@ export default function BalootScreen() {
                             color: "white",
                             marginHorizontal: 6,
                             fontWeight: "bold",
+                            fontSize: 25,
                           }}
                         >
                           {youInput.masharea[key] || 0}
                         </Text>
 
-                        <Pressable onPress={() => modifyMasharea("you", key, -1)}>
-                          <Text style={{ color: "#FF4757", fontSize: 18 }}>–</Text>
+                        <Pressable style={{ width: 20, alignItems: "center" }} onPress={() => modifyMasharea("you", key, -1)}>
+                          <Text style={{ color: "#FF4757", fontSize: 25 }}>–</Text>
                         </Pressable>
                       </View>
 
@@ -659,8 +640,8 @@ export default function BalootScreen() {
                           alignItems: "center",
                         }}
                       >
-                        <Pressable onPress={() => modifyMasharea("them", key, +1)}>
-                          <Text style={{ color: "limegreen", fontSize: 18 }}>+</Text>
+                        <Pressable style={{ width: 20 }} onPress={() => modifyMasharea("them", key, +1)}>
+                          <Text style={{ color: "limegreen", fontSize: 25 }}>+</Text>
                         </Pressable>
 
                         <Text
@@ -668,13 +649,14 @@ export default function BalootScreen() {
                             color: "white",
                             marginHorizontal: 6,
                             fontWeight: "bold",
+                            fontSize: 25,
                           }}
                         >
                           {themInput.masharea[key] || 0}
                         </Text>
 
-                        <Pressable onPress={() => modifyMasharea("them", key, -1)}>
-                          <Text style={{ color: "#FF4757", fontSize: 18 }}>–</Text>
+                        <Pressable style={{ width: 20, alignItems: "center" }} onPress={() => modifyMasharea("them", key, -1)}>
+                          <Text style={{ color: "#FF4757", fontSize: 25 }}>–</Text>
                         </Pressable>
                       </View>
                     </View>
@@ -713,8 +695,8 @@ export default function BalootScreen() {
           </View>
         </TouchableWithoutFeedback>
       </Modal>
-
-
+  
+      {/* === END GAME MODAL === */}
       {/* End Game Modal */}
       <Modal
         visible={showEndGame}
@@ -885,7 +867,7 @@ export default function BalootScreen() {
                       setShowEndGame(false)
                     }}
                   >
-                    <Text style={[GlobalStyles.buttonText, { fontSize: 14 }]}><FaArrowAltCircleUp /> Restart</Text>
+                    <Text style={[GlobalStyles.buttonText, { fontSize: 14 }]}><FontAwesome name="arrow-circle-up" size={16} color="#FFFFFF" style={{ marginRight: 5 }} /> Restart</Text>
                   </Pressable>
 
                   <Pressable
@@ -907,8 +889,8 @@ export default function BalootScreen() {
           </View>
         </TouchableWithoutFeedback>
       </Modal>
-
-
+      {/* Keep your same logic & structure — already well-styled */}
     </View>
   )
+  
 }
